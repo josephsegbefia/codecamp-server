@@ -32,10 +32,10 @@ const userSchema = new Schema({
   password: { type: String, required: true },
   emailToken: { type: String },
   passwordResetToken: { type: String },
-  // Try this
-  // uniqueIdentifier: {type: String, default: null },
+  // Remeber to change isVerified to false
   isVerified: { type: Boolean, default: true },
   isAdmin: {type: Boolean, default: false},
+  courses: [{ type: Schema.Types.ObjectId, ref: "Course"}]
 });
 
 const User = model("User", userSchema);
