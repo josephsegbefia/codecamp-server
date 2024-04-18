@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const { Schema, model } = mongoose;
 const { isAuthenticated } = require('../middleware/jwt.middleware');
 
 
@@ -21,7 +20,6 @@ router.post('/courses/create', async (req, res, next) => {
     const nameToSave = name.trim().toLowerCase();
     const descriptionToSave = description.trim().toLowerCase();
     const estimatedDurationToSave = estimatedDuration.trim().toLowerCase();
-    // const levelToSave = level.trim().toLowerCase();
     const programmingLanguageToSave = programmingLanguage.trim().toLowerCase();
 
     const newCourse = await Course.create({ name:nameToSave, description:descriptionToSave, estimatedDuration:estimatedDurationToSave, level, programmingLanguage:programmingLanguageToSave, lessons:[] });
@@ -34,8 +32,32 @@ router.post('/courses/create', async (req, res, next) => {
 
   }catch(error){
     console.log(error);
-    res.status(500).json({ message: "Internal Server Error", error});
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+// get all courses
+router.get('/courses', async (req, res, next) => {
+  try {
+    const { limit, offset } = req.query;
+    const limitValue = parseInt(limit) || 1;
+    const offsetValue = parseInt(offset) || 0;
+
+
+    const courses = await Course.find()
+
+    const totalCount = courses.length;
+    const totalPages = Math.ceil(totalCount / limitValue);
+
+    const coursesToShow = await Course.find().populate({path: 'lessons', select: '-__v', options: {limit: limitValue, skip: offsetValue }})
+
+    res.status(200).json({ courses: coursesToShow, totalPages });
+
+  }catch(error){
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error"});
+  }
+
+})
 
 module.exports = router;
