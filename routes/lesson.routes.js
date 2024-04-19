@@ -120,5 +120,40 @@ router.put('/courses/:courseId/lessons/:lessonId', async (req, res, next) => {
   }
 });
 
+// delete a lesson
+router.delete('/courses/:courseId/lessons/:lessonId', async (req, res, next) => {
+  try {
+    const { courseId, lessonId } = req.params;
+
+    const course = await Course.findOne({ _id: courseId }).populate('lessons');
+
+    if(!course){
+      res.status(500).json({ message: "Course not found!" });
+      return;
+    }
+
+    // Find lesson index within the course lessons array
+    const lessonIndex = course.lessons.findIndex(lesson => lesson._id.toString() === lessonId);
+
+    if(lessonIndex === -1){
+      res.status(500).json({ message: "Lesson not found in course" });
+      return;
+    }
+
+    // Remove lesson from course & save course
+    course.lessons.splice(lessonIndex, 1);
+    await course.save();
+
+    // delete lesson
+    await Lesson.findByIdAndDelete(lessonId);
+
+    res.status(200).json({ message: "Lesson deleted successfully" })
+
+  }catch(error){
+    console.log(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+})
+
 
 module.exports = router;
