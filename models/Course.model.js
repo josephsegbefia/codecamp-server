@@ -9,6 +9,7 @@ const courseSchema = new Schema({
   programmingLanguage: {type: String, required: true},
   lessons: [{ type: Schema.Types.ObjectId, ref: 'Lesson' }],
   estimatedDuration: { type: String, required: true},
+  completed: { type: Boolean, default: false },
   level: { type: String, enum: ["Beginner", "Intermediate", "Expert"], required: true },
 }, {
   timestamps: true
