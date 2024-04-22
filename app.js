@@ -27,6 +27,9 @@ app.use("/api", courseRouter);
 const lessonRouter = require("./routes/lesson.routes");
 app.use("/api", lessonRouter);
 
+const dashboardRouter = require("./routes/dashboard.routes");
+app.use('/api', dashboardRouter);
+
 // ❗ To handle errors. Routes that don't exist or errors that you handle in specific routes
 require("./error-handling")(app);
 

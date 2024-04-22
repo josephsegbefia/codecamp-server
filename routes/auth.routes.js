@@ -136,7 +136,7 @@ router.post("/verify-email", async (req, res, next) => {
   try {
     const emailToken = req.body.emailToken;
     if (!emailToken)
-      return res.status(404).json({ message: "Email Token not found." });
+      return res.status(404).json({ message: "Email token not found." });
 
     const user = await User.findOne({ emailToken });
     if (user) {

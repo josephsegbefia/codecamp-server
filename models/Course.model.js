@@ -11,6 +11,7 @@ const courseSchema = new Schema({
   estimatedDuration: { type: String, required: true},
   completed: { type: Boolean, default: false },
   level: { type: String, enum: ["Beginner", "Intermediate", "Expert"], required: true },
+  lastAccessedDate: { type: String }
 }, {
   timestamps: true
 })
