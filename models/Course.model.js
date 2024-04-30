@@ -10,6 +10,7 @@ const courseSchema = new Schema({
   lessons: [{ type: Schema.Types.ObjectId, ref: 'Lesson' }],
   estimatedDuration: { type: String, required: true},
   completed: { type: Boolean, default: false },
+  published: {type: Boolean, default: false},
   level: { type: String, enum: ["Beginner", "Intermediate", "Expert"], required: true },
   lastAccessedDate: { type: String }
 }, {
