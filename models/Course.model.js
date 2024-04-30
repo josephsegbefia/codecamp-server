@@ -12,6 +12,7 @@ const courseSchema = new Schema({
   completed: { type: Boolean, default: false },
   published: {type: Boolean, default: false},
   level: { type: String, enum: ["Beginner", "Intermediate", "Expert"], required: true },
+  path: {type: String, enum: ["Course", "Skill Path", "Career Path"]},
   lastAccessedDate: { type: String }
 }, {
   timestamps: true
