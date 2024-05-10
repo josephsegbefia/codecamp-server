@@ -33,9 +33,26 @@ const userSchema = new Schema({
   emailToken: { type: String },
   passwordResetToken: { type: String },
   // Remeber to change isVerified to false
-  isVerified: { type: Boolean, default: true },
-  isAdmin: {type: Boolean, default: false},
-  courses: [{ type: Schema.Types.ObjectId, ref: "Course"}]
+  isVerified: { type: Boolean, default: false },
+  isAdmin: { type: Boolean, default: false },
+  courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+  progress: []
+  // coursesProgress: [
+  //   {
+  //     course: { type: Schema.Types.ObjectId, ref: "Course" },
+  //     lessonsProgress: [
+  //       {
+  //         lesson: { type: Schema.Types.ObjectId, ref: "Lesson" },
+  //         exercisesProgress: [
+  //           {
+  //             exercise: { type: Schema.Types.ObjectId, ref: "Exercise" },
+  //             completed: { type: Boolean, default: false }
+  //           }
+  //         ]
+  //       }
+  //     ]
+  //   }
+  // ]
 });
 
 const User = model("User", userSchema);

@@ -4,7 +4,7 @@ const { Schema, model } = mongoose;
 
 
 const courseSchema = new Schema({
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
   description: { type: String, required: true },
   programmingLanguage: {type: String, required: true},
   lessons: [{ type: Schema.Types.ObjectId, ref: 'Lesson' }],

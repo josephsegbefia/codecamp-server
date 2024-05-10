@@ -14,7 +14,6 @@ const saltRounds = 10;
 router.post("/signup", (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
-
   // Check if the email or password or name is provided as an empty string
   if (email === "" || password === "" || firstName === "" || lastName === "") {
     res.status(400).json({ message: "Provide email, first name, last name" });
@@ -54,10 +53,10 @@ router.post("/signup", (req, res, next) => {
       email,
       firstName,
       lastName,
-
+      courses: [],
       password: hashedPassword,
       emailToken: crypto.randomBytes(64).toString("hex"),
-      passwordResetToken: crypto.randomBytes(64).toString("hex"),
+      passwordResetToken: crypto.randomBytes(64).toString("hex")
     })
       .then((createdUser) => {
         const {
@@ -198,7 +197,8 @@ router.post("/password-reset-email", async (req, res, next) => {
       sendPasswordResetEmail(user);
       res.status(200).json({
         user: user,
-        message: "Password reset email has been sent to your email. Kindly check your spam if email not found in your inbox"
+        message:
+          "Password reset email has been sent to your email. Kindly check your spam if email not found in your inbox"
       });
     } else {
       res.status(404).json({ message: "User with that email does not exist" });
