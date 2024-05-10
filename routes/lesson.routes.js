@@ -87,56 +87,38 @@ router.get(
       const limitValue = parseInt(limit) || 1;
       const offsetValue = parseInt(offset) || 0;
 
-      const user = await User.findById(userId).populate("courses");
-
-      const courseLessons = await user.courses
-        .find((course) => course._id.toString() === courseId)
-        .populate({
+      const user = await User.findOne({ _id: userId }).populate({
+        path: "courses",
+        select: "-__v",
+        populate: {
           path: "lessons",
           select: "-__v",
-          options: { limit: limitValue, offset: offsetValue }
-        });
-      res.status(200).json({ lessons: courseLessons });
+          options: {
+            limit: limitValue,
+            skip: offsetValue
+          }
+        }
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      const course = user.courses.find(
+        (course) => course._id.toString() === courseId
+      );
+      if (!course) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+
+      const totalCount = course.lessons.length;
+      const totalPages = Math.ceil(totalCount / limitValue);
+
+      res.status(200).json({ lessons: course.lessons, totalPages });
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: "Internal Server Error" });
+      console.error(error);
+      res.status(500).json({ message: "Oops, something went wrong!" });
     }
-    // const { userId, courseId } = req.params;
-    // const { limit, offset } = req.query;
-    // const limitValue = parseInt(limit) || 1;
-    // const offsetValue = parseInt(offset) || 0;
-    // Course.findOne({ _id: courseId })
-    //   .populate("lessons", "-__v")
-    //   .select("lessons")
-    //   .then((course) => {
-    //     console.log(course);
-    //     if (!course) {
-    //       return res.status(404).json({ message: "Course not found" });
-    //     }
-    //     const totalCount = course.lessons.length;
-    //     const totalPages = Math.ceil(totalCount / limitValue);
-    //     Course.findOne({ _id: courseId })
-    //       .populate({
-    //         path: "lessons",
-    //         select: "-__v",
-    //         options: {
-    //           limit: limitValue,
-    //           skip: offsetValue
-    //         }
-    //       })
-    //       .select("lessons")
-    //       .then((paginatedCourse) => {
-    //         res
-    //           .status(200)
-    //           .json({ lessons: paginatedCourse.lessons, totalPages });
-    //       })
-    //       .catch((error) =>
-    //         res.status(500).json({ message: "Ooops, something went wrong!" })
-    //       );
-    //   })
-    //   .catch((error) =>
-    //     res.status(500).json({ message: "Ooops, something went wrong!" })
-    //   );
   }
 );
 
